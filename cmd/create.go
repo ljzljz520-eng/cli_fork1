@@ -5,7 +5,9 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -13,6 +15,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/create-go-app/cli/v4/pkg/cgapp"
+	"github.com/create-go-app/cli/v4/pkg/lockfile"
+	"github.com/create-go-app/cli/v4/pkg/pipeline"
 	"github.com/create-go-app/cli/v4/pkg/registry"
 )
 
@@ -23,7 +27,28 @@ func init() {
 		"template", "t", false,
 		"enables to use custom backend and frontend templates",
 	)
+	createCmd.Flags().StringVarP(&manifestLocator, "manifest", "m", "",
+		"signed registry manifest (embedded default; local path or https URL)")
+	createCmd.Flags().StringVarP(&trustRootPath, "trust-root", "", "",
+		"override the embedded root of trust (Ed25519 keys JSON)")
+	createCmd.Flags().StringVarP(&lockPath, "lock", "l", "cgapp.lock",
+		"output path of the resolved, digest-pinned lock file")
+	createCmd.Flags().BoolVar(&offlineMode, "offline", false,
+		"refuse network fetches; require a warm local cache")
+	createCmd.Flags().BoolVar(&strictSandbox, "strict-sandbox", false,
+		"fail when OS-level sandboxing (seatbelt/bubblewrap) is unavailable")
+	createCmd.Flags().BoolVar(&noSandbox, "no-sandbox", false,
+		"disable OS-level sandboxing (scratch-dir/env isolation still applies)")
 }
+
+var (
+	manifestLocator string
+	trustRootPath   string
+	lockPath        string
+	offlineMode     bool
+	strictSandbox   bool
+	noSandbox       bool
+)
 
 // createCmd represents the `create` command.
 var createCmd = &cobra.Command{
@@ -47,6 +72,7 @@ func runCreateCmd(cmd *cobra.Command, args []string) error {
 	)
 
 	// Start survey.
+	var sel lockfile.Selection
 	if useCustomTemplate {
 		// Custom survey.
 		if err := survey.Ask(
@@ -56,11 +82,12 @@ func runCreateCmd(cmd *cobra.Command, args []string) error {
 		); err != nil {
 			return cgapp.ShowError(err.Error())
 		}
-
-		// Define variables for better display.
-		backend = customCreateAnswers.Backend
-		frontend = customCreateAnswers.Frontend
-		proxy = customCreateAnswers.Proxy
+		sel = lockfile.Selection{
+			Custom:   true,
+			Backend:  customCreateAnswers.Backend,
+			Frontend: customCreateAnswers.Frontend,
+			Proxy:    customCreateAnswers.Proxy,
+		}
 	} else {
 		// Default survey.
 		if err := survey.Ask(
@@ -70,14 +97,11 @@ func runCreateCmd(cmd *cobra.Command, args []string) error {
 		); err != nil {
 			return cgapp.ShowError(err.Error())
 		}
-
-		// Define variables for better display.
-		backend = fmt.Sprintf(
-			"github.com/create-go-app/%v-go-template",
-			strings.ReplaceAll(createAnswers.Backend, "/", "_"),
-		)
-		frontend = createAnswers.Frontend
-		proxy = createAnswers.Proxy
+		sel = lockfile.Selection{
+			Backend:  createAnswers.Backend,
+			Frontend: createAnswers.Frontend,
+			Proxy:    createAnswers.Proxy,
+		}
 	}
 
 	// Catch the cancel action (hit "n" in the last question).
@@ -93,214 +117,52 @@ func runCreateCmd(cmd *cobra.Command, args []string) error {
 	// Start timer.
 	startTimer := time.Now()
 
-	/*
-		The project's backend part creation.
-	*/
-
-	// Clone backend files from git repository.
-	if err := cgapp.GitClone("backend", backend); err != nil {
+	report, err := pipeline.Create(context.Background(), sel, pipeline.Options{
+		ManifestLocator:    manifestLocator,
+		TrustRootPath:      trustRootPath,
+		LockPath:           filepathBase(lockPath),
+		CacheRoot:          os.Getenv("CGAPP_CACHE_DIR"),
+		Offline:            offlineMode,
+		Strict:             strictSandbox,
+		NoOSSandbox:        noSandbox,
+		AttestationKeyPath: os.Getenv("CGAPP_ATTESTATION_KEY"),
+	})
+	if err != nil {
 		return cgapp.ShowError(err.Error())
 	}
 
-	// Show success report.
-	cgapp.ShowMessage(
-		"success",
-		fmt.Sprintf("Backend was created with template `%v`!", backend),
-		true, false,
-	)
+	for _, w := range report.Warnings {
+		cgapp.ShowMessage("info", "warning: "+w, false, false)
+	}
 
-	/*
-		The project's frontend part creation.
-	*/
-
-	if frontend != "none" {
-		// Checking, if you use custom templates.
-		if useCustomTemplate {
-			// Clone frontend files from git repository.
-			if err := cgapp.GitClone("frontend", frontend); err != nil {
-				return cgapp.ShowError(err.Error())
-			}
-		} else {
-			switch frontend {
-			case "next":
-				// Create a default frontend template with Next.js (React).
-				if err := cgapp.ExecCommand(
-					"npx",
-					[]string{
-						"create-next-app@latest", "frontend",
-						"--javascript",
-						"--eslint",
-						"--app",
-						"--tailwind", "false",
-						"--src-dir", "false",
-						"--import-alias", "false",
-					}, true,
-				); err != nil {
-					return err
-				}
-			case "next-ts":
-				// Create a default frontend template with Next.js (React, Typescript).
-				if err := cgapp.ExecCommand(
-					"npx",
-					[]string{
-						"create-next-app@latest", "frontend",
-						"--typescript",
-						"--eslint",
-						"--app",
-						"--tailwind", "false",
-						"--src-dir", "false",
-						"--import-alias", "false",
-					}, true,
-				); err != nil {
-					return err
-				}
-			case "nuxt":
-				// Create a default frontend template with Nuxt v3 (Vue.js v3, Typescript).
-				if err := cgapp.ExecCommand(
-					"npx",
-					[]string{
-						"nuxi@latest", "init", "frontend",
-					}, true,
-				); err != nil {
-					return err
-				}
-			case "sveltekit":
-				// Create a default frontend template with Sveltekit (Svelte, Typescript).
-				if err := cgapp.ExecCommand(
-					"npm",
-					[]string{
-						"create", "@svelte-add/kit@latest", "frontend",
-						"--",
-						"--with", "typescript+eslint+prettier",
-					}, true,
-				); err != nil {
-					return err
-				}
-			default:
-				// Create a default frontend template from Vite (Pure JS/TS, React, Preact, Vue, Svelte, Lit).
-				if err := cgapp.ExecCommand(
-					"npm",
-					[]string{
-						"create", "vite@latest", "frontend",
-						"--",
-						"--template",
-						frontend,
-					}, true,
-				); err != nil {
-					return err
-				}
-			}
+	cgapp.ShowMessage("success",
+		fmt.Sprintf("Backend was created with template `%v`!", sel.Backend), true, false)
+	if sel.Frontend != "" && sel.Frontend != "none" {
+		label := sel.Frontend
+		if report.Lock.Selection.RequestedFrontend != "" {
+			label = fmt.Sprintf("%s (resolved alias -> %s)", report.Lock.Selection.RequestedFrontend, sel.Frontend)
 		}
-
-		// Show success report.
-		cgapp.ShowMessage(
-			"success",
-			fmt.Sprintf("Frontend was created with template `%v`!", frontend),
-			false, false,
-		)
+		cgapp.ShowMessage("success",
+			fmt.Sprintf("Frontend was created with pinned generator `%v`!", label), false, false)
 	}
-
-	/*
-		The project's webserver part creation.
-	*/
-
-	// Copy Ansible playbook, inventory and roles from embedded file system.
-	if err := cgapp.CopyFromEmbeddedFS(
-		&cgapp.EmbeddedFileSystem{
-			Name:       registry.EmbedTemplates,
-			RootFolder: "templates",
-			SkipDir:    true,
-		},
-	); err != nil {
-		return cgapp.ShowError(err.Error())
+	if sel.Proxy != "none" {
+		cgapp.ShowMessage("success",
+			fmt.Sprintf("Web/Proxy server configuration for `%v` was created!", sel.Proxy), false, false)
 	}
-
-	// Set template variables for Ansible playbook and inventory files.
-	inventory = registry.AnsibleInventoryVariables[proxy].List
-	playbook = registry.AnsiblePlaybookVariables[proxy].List
-
-	// Generate Ansible inventory file.
-	if err := cgapp.GenerateFileFromTemplate("hosts.ini.tmpl", inventory); err != nil {
-		return cgapp.ShowError(err.Error())
-	}
-
-	// Generate Ansible playbook file.
-	if err := cgapp.GenerateFileFromTemplate("playbook.yml.tmpl", playbook); err != nil {
-		return cgapp.ShowError(err.Error())
-	}
-
-	// Show success report.
-	if proxy != "none" {
-		cgapp.ShowMessage(
-			"success",
-			fmt.Sprintf("Web/Proxy server configuration for `%v` was created!", proxy),
-			false, false,
-		)
-	}
-
-	/*
-		The project's Ansible roles part creation.
-	*/
-
-	// Copy Ansible roles from embedded file system.
-	if err := cgapp.CopyFromEmbeddedFS(
-		&cgapp.EmbeddedFileSystem{
-			Name:       registry.EmbedRoles,
-			RootFolder: "roles",
-			SkipDir:    false,
-		},
-	); err != nil {
-		return cgapp.ShowError(err.Error())
-	}
-
-	// Show success report.
-	cgapp.ShowMessage(
-		"success",
-		"Ansible inventory, playbook and roles for deploying your project was created!",
-		false, false,
-	)
-
-	/*
-		The project's misc files part creation.
-	*/
-
-	// Copy from embedded file system.
-	if err := cgapp.CopyFromEmbeddedFS(
-		&cgapp.EmbeddedFileSystem{
-			Name:       registry.EmbedMiscFiles,
-			RootFolder: "misc",
-			SkipDir:    true,
-		},
-	); err != nil {
-		return cgapp.ShowError(err.Error())
-	}
-
-	/*
-		Cleanup project.
-	*/
-
-	// Set unused proxy roles.
-	switch proxy {
-	case "traefik", "traefik-acme-dns":
-		proxyList = []string{"nginx"}
-	case "nginx":
-		proxyList = []string{"traefik"}
-	default:
-		proxyList = []string{"traefik", "nginx"}
-	}
-
-	// Delete unused roles, backend and frontend files.
-	cgapp.RemoveFolders("roles", proxyList)
-	cgapp.RemoveFolders("backend", []string{".git", ".github"})
-	cgapp.RemoveFolders("frontend", []string{".git", ".github"})
 
 	// Stop timer.
 	stopTimer := cgapp.CalculateDurationTime(startTimer)
-	cgapp.ShowMessage(
-		"info",
-		fmt.Sprintf("Completed in %v seconds!", stopTimer),
-		true, true,
-	)
+	cgapp.ShowMessage("info",
+		fmt.Sprintf("Completed in %v seconds!", stopTimer), true, false)
+
+	cgapp.ShowMessage("success",
+		fmt.Sprintf("Supply chain artifacts: %s, %s, %s",
+			report.LockPath, report.SBOMPath, report.AttestationPath),
+		false, false)
+	cgapp.ShowMessage("info",
+		fmt.Sprintf("Output digest: %s (verified materials: %d, sandbox: %s)",
+			report.OutputDigest, report.VerifiedMaterials, sandboxLabel(report.OSConfinement)),
+		false, true)
 
 	// Ending messages.
 	cgapp.ShowMessage(
@@ -308,23 +170,41 @@ func runCreateCmd(cmd *cobra.Command, args []string) error {
 		"* Please put credentials into the Ansible inventory file (`hosts.ini`) before you start deploying a project!",
 		false, false,
 	)
-	if !useCustomTemplate && frontend != "none" {
-		cgapp.ShowMessage(
-			"",
-			fmt.Sprintf("* Visit https://vitejs.dev/guide/ for more info about using the `%v` frontend template!", frontend),
-			false, false,
-		)
-	}
+	cgapp.ShowMessage(
+		"",
+		"* Frontend dependencies are not installed (offline sandbox); run `npm install` in ./frontend when ready.",
+		false, false,
+	)
+	cgapp.ShowMessage(
+		"",
+		"* Commit cgapp.lock to your repository: it pins every input for reproducible, verifiable re-runs.",
+		false, false,
+	)
 	cgapp.ShowMessage(
 		"",
 		"* A helpful documentation and next steps with your project is here https://github.com/create-go-app/cli/wiki",
 		false, true,
 	)
-	cgapp.ShowMessage(
-		"",
-		"Have a happy new project! :)",
-		false, true,
-	)
+	cgapp.ShowMessage("", "Have a happy new project! :)", false, true)
 
 	return nil
+}
+
+// filepathBase keeps the lock inside the project directory even when an
+// absolute -l path is passed (delivery always targets cwd).
+func filepathBase(p string) string {
+	if p == "" {
+		return "cgapp.lock"
+	}
+	if i := strings.LastIndex(p, "/"); i >= 0 {
+		return p[i+1:]
+	}
+	return p
+}
+
+func sandboxLabel(s string) string {
+	if s == "" {
+		return "dir+env"
+	}
+	return s
 }

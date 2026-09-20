@@ -33,3 +33,11 @@ dist/
 
 # Go generate files
 *_gen.go
+
+# cgapp registry signing key (private half must never be committed)
+hack/cgapp-registry-key.json
+
+# cgapp generated project artifacts / local scratch
+.cgapp-work-*/
+cgapp.lock
+.cgapp/

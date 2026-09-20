@@ -1,0 +1,518 @@
+{
+  "schemaVersion": "1.0",
+  "mediaType": "application/vnd.cgapp.registry-manifest.v1+json",
+  "name": "create-go-app default registry",
+  "revision": "2026-09-19.1",
+  "generatedAt": "2026-09-19T00:00:00Z",
+  "generator": {
+    "name": "cgapp",
+    "minVersion": "4.1.0"
+  },
+  "toolchains": {
+    "go": {
+      "minVersion": "1.21.0"
+    },
+    "node": {
+      "minVersion": "20.9.0"
+    },
+    "ansible": {
+      "minVersion": "2.14.0"
+    }
+  },
+  "licensePolicy": {
+    "mode": "allowlist",
+    "scope": "direct",
+    "allowed": [
+      "Apache-2.0",
+      "MIT",
+      "ISC",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "0BSD",
+      "MPL-2.0",
+      "Python-2.0",
+      "CC0-1.0"
+    ],
+    "denied": [
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "LGPL-2.0-only",
+      "LGPL-2.0-or-later",
+      "LGPL-2.1-only",
+      "LGPL-2.1-or-later",
+      "LGPL-3.0-only",
+      "LGPL-3.0-or-later",
+      "SSPL-1.0",
+      "BUSL-1.1"
+    ],
+    "allowUnknown": false
+  },
+  "embedded": {
+    "ansibleVersion": "2.14",
+    "license": "Apache-2.0",
+    "roles": {
+      "path": "roles",
+      "digest": "sha256:5c3c5f00b3d42a85bc29d5d71c2787aae3687b90aa2a25358502ee64fcbd9d32"
+    },
+    "templates": {
+      "path": "templates",
+      "digest": "sha256:01325a8bbf524d8d3217658daf7a78923de20626997491e25806dbdab40f0137"
+    },
+    "misc": {
+      "path": "misc",
+      "digest": "sha256:5828f7e59a36010cca9980d254024dbe422f7e5907fd28fe7eab4d7a9f8358a0"
+    }
+  },
+  "backends": {
+    "chi": {
+      "source": "https://github.com/create-go-app/chi-go-template",
+      "kind": "git",
+      "commit": "25350a2a2fd4c298cf53aa669f9f508f2e575c03",
+      "tree": "0c555ef449ca261d6279d87ebc20be973dfc78d1",
+      "contentDigest": "sha256:b1b11e32555c1537276d4964854d43552a377bf8a9aba15c3d59bca541961646",
+      "license": "Apache-2.0",
+      "goVersion": "1.17",
+      "stripPaths": [
+        ".git",
+        ".github"
+      ],
+      "provenance": {
+        "type": "registry-attested"
+      }
+    },
+    "fiber": {
+      "source": "https://github.com/create-go-app/fiber-go-template",
+      "kind": "git",
+      "commit": "286d0d84d3373668634fcc30a3cec60740a8f4dc",
+      "tree": "fc162c303eee13d09e213b1f30418d03b7ed1bea",
+      "contentDigest": "sha256:014365aa1af1e92091a6fda2ee69ba9905cb023a16a32c4d476e08b90b2f80b6",
+      "license": "Apache-2.0",
+      "goVersion": "1.24.0",
+      "stripPaths": [
+        ".git",
+        ".github"
+      ],
+      "provenance": {
+        "type": "registry-attested"
+      }
+    },
+    "net/http": {
+      "source": "https://github.com/create-go-app/net_http-go-template",
+      "kind": "git",
+      "commit": "a2ed6884843b7ae0fde58f6b15dfb9c907b7e916",
+      "tree": "86af409f5c5113fc45143296c0b5d4dceaf2fc87",
+      "contentDigest": "sha256:e7048499d4a6a93133bdb165b40a6d5cfe5557cbdc3963688b4235b900286bfb",
+      "license": "Apache-2.0",
+      "goVersion": "1.17",
+      "stripPaths": [
+        ".git",
+        ".github"
+      ],
+      "provenance": {
+        "type": "registry-attested"
+      }
+    }
+  },
+  "frontends": {
+    "lit": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "lit"
+      ]
+    },
+    "lit-ts": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "lit-ts"
+      ]
+    },
+    "next": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-next-app",
+        "version": "16.3.5",
+        "tarball": "https://registry.npmjs.org/create-next-app/-/create-next-app-16.3.5.tgz",
+        "integrity": "sha512-0XXQn0soB+VkvguZR1Z+7Je4B6DDjW1bAfGPo+S+DpKiGSz/6WDy4AxUD6SQOmYkXoE2ik4jIrPlswiG5VP6hA=="
+      },
+      "node": "\u003e=20.9.0",
+      "license": "MIT",
+      "bin": "create-next-app",
+      "args": [
+        "frontend",
+        "--javascript",
+        "--eslint",
+        "--app",
+        "--no-tailwind",
+        "--use-npm",
+        "--skip-install",
+        "--disable-git",
+        "--yes"
+      ]
+    },
+    "next-ts": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-next-app",
+        "version": "16.3.5",
+        "tarball": "https://registry.npmjs.org/create-next-app/-/create-next-app-16.3.5.tgz",
+        "integrity": "sha512-0XXQn0soB+VkvguZR1Z+7Je4B6DDjW1bAfGPo+S+DpKiGSz/6WDy4AxUD6SQOmYkXoE2ik4jIrPlswiG5VP6hA=="
+      },
+      "node": "\u003e=20.9.0",
+      "license": "MIT",
+      "bin": "create-next-app",
+      "args": [
+        "frontend",
+        "--typescript",
+        "--eslint",
+        "--app",
+        "--no-tailwind",
+        "--use-npm",
+        "--skip-install",
+        "--disable-git",
+        "--yes"
+      ]
+    },
+    "nuxt": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "nuxi",
+        "version": "3.37.0",
+        "tarball": "https://registry.npmjs.org/nuxi/-/nuxi-3.37.0.tgz",
+        "integrity": "sha512-jabJ/DA3Jw4SlCCx4Ha+kENObP4ouyTPYQweU1T+53QaLb3odHG9RaJGMm2zh8Kb4PdKIECAZkucVM83fQoRoA=="
+      },
+      "node": "^16.10.0 || \u003e=18.0.0",
+      "license": "MIT",
+      "bin": "nuxi",
+      "args": [
+        "init",
+        "frontend",
+        "--packageManager",
+        "npm",
+        "--no-install",
+        "--no-git"
+      ]
+    },
+    "preact": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "preact"
+      ]
+    },
+    "preact-ts": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "preact-ts"
+      ]
+    },
+    "qwik": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "qwik"
+      ]
+    },
+    "qwik-ts": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "qwik-ts"
+      ]
+    },
+    "react": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "react"
+      ]
+    },
+    "react-swc": {
+      "status": "alias",
+      "replacement": "react",
+      "reason": "SWC is the default compiler in create-vite \u003e= 6; the separate react-swc templates were removed"
+    },
+    "react-swc-ts": {
+      "status": "alias",
+      "replacement": "react-ts",
+      "reason": "SWC is the default compiler in create-vite \u003e= 6; the separate react-swc-ts templates were removed"
+    },
+    "react-ts": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "react-ts"
+      ]
+    },
+    "solid": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "solid"
+      ]
+    },
+    "solid-ts": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "solid-ts"
+      ]
+    },
+    "svelte": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "svelte"
+      ]
+    },
+    "svelte-ts": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "svelte-ts"
+      ]
+    },
+    "sveltekit": {
+      "status": "retired",
+      "replacement": "svelte",
+      "reason": "the @svelte-add/kit initializer was unpublished from npm; use the Vite 'svelte'/'svelte-ts' templates or pass a custom repository with --template"
+    },
+    "vanilla": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "vanilla"
+      ]
+    },
+    "vanilla-ts": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "vanilla-ts"
+      ]
+    },
+    "vue": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "vue"
+      ]
+    },
+    "vue-ts": {
+      "status": "available",
+      "generator": {
+        "kind": "npm",
+        "registry": "https://registry.npmjs.org",
+        "name": "create-vite",
+        "version": "9.2.1",
+        "tarball": "https://registry.npmjs.org/create-vite/-/create-vite-9.2.1.tgz",
+        "integrity": "sha512-nE710dPFzm9CavJw4PtpOLQpNBiOzFV+tGbwcmBdg1A3TWgFkqypDmjt44oV0jvvQEdGsvFAvQ5pUnKrdcwciw=="
+      },
+      "node": "^20.19.0 || \u003e=22.12.0",
+      "license": "MIT",
+      "bin": "create-vite",
+      "args": [
+        "frontend",
+        "--template",
+        "vue-ts"
+      ]
+    }
+  },
+  "signature": {
+    "keyid": "c766bfbff3f8c2cd68a2c7a3b6473f15a27a3ec5c984b21deca37448f880d584",
+    "algorithm": "ed25519",
+    "sig": "Fv61wCrPoymmOvhas8M0Wj626Qq881xE7HHRuWPpV/I7ZN/A2hVpQJuNr2hYBTln4AcE2F/wyFraMs5K2bYvCg=="
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1",
+  "mediaType": "application/vnd.cgapp.trust-root.v1+json",
+  "keys": [
+    {
+      "keyid": "c766bfbff3f8c2cd68a2c7a3b6473f15a27a3ec5c984b21deca37448f880d584",
+      "keyType": "ed25519",
+      "publicKey": "X4Uc5utUn5QffLVCTzExEGgR0smJvj4+B3g1vcFTkbQ=",
+      "issuer": "https://create-go.app/registry/dev",
+      "usages": [
+        "registry-sign",
+        "attestor"
+      ],
+      "validFrom": "2026-09-19T15:41:26Z",
+      "validUntil": "2031-09-19T15:41:26Z"
+    }
+  ]
+}
